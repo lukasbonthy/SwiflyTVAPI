@@ -503,7 +503,7 @@ app.get('/v2/embed/series', (req, res) => {
   const cleanedId = id.replace(/\?v=undefined/i, '');
 
   // For other cases, construct the URL with season and episode
-  const embedUrl = `https://purrfect-weak-marmot.glitch.me/tv/${cleanedId}/${season}${episode ? `/${episode}` : ''}`;
+  const embedUrl = `https://swiflytvapiembed.onrender.com//tv/${cleanedId}/${season}${episode ? `/${episode}` : ''}`;
   res.redirect(embedUrl);
 });
 
@@ -521,7 +521,7 @@ app.get('/v2/embed/movie', async (req, res) => {
 
   try {
     // Construct the URL with TMDB ID
-    const embedUrl = `https://purrfect-weak-marmot.glitch.me/movie/${id}`;
+    const embedUrl = `https://swiflytvapiembed.onrender.com/movie/${id}`;
     res.redirect(embedUrl);
   } catch (error) {
     return res.status(500).json({ success: false, error: 'Internal Server Error' });
