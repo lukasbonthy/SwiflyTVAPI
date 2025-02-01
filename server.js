@@ -296,9 +296,6 @@ app.get('/v3/game/:id', (req, res) => {
   }
 });
 
-
-// ... (previous code)
-
 app.get('/v3/movie', async (req, res) => {
   try {
     // Fetch genres
