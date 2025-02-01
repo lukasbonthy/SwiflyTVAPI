@@ -13,15 +13,26 @@ app.use(cors());
 
 // Use the TMDb and YouTube API keys from the environment variable
 const TMDB_API_KEY = process.env.API_KEY;
-// Retrieve TMDb API key from environment variable
-const tmdbApiKey = process.env.API_KEY;
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-
 
 if (!TMDB_API_KEY || !YOUTUBE_API_KEY) {
   console.error('TMDb API key or YouTube API key not provided. Please set the API keys in the environment variables.');
   process.exit(1);
 }
+
+// Middleware to wake up the external API
+app.use(async (req, res, next) => {
+  try {
+    // Send a GET request to the external API to wake it up
+    await axios.get('https://swiflytvapiembed.onrender.com');
+    console.log('Pinged https://swiflytvapiembed.onrender.com to keep it awake.');
+  } catch (error) {
+    console.error('Failed to ping https://swiflytvapiembed.onrender.com:', error.message);
+  }
+  // Continue to the next middleware or route handler
+  next();
+});
+
 
 // Serve the all.css file
 app.get('/all.css', (req, res) => {
@@ -187,7 +198,6 @@ app.get('/v3/series', async (req, res) => {
             title: 'Mystery Series 🕵️',
             items: mysterySeries,
           },
-          // ... Similar collection entries for other series categories ...
         ],
       },
     };
@@ -198,8 +208,6 @@ app.get('/v3/series', async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
-
-// ... (remaining code)
 
 // Game data
 const games = [
@@ -411,7 +419,6 @@ app.get('/v3/movie', async (req, res) => {
             title: 'Cartoon Movies ☀️',
             items: cartoonMovies,
           },
-          // ... Similar collection entries for other categories ...
         ],
       },
     };
@@ -422,10 +429,6 @@ app.get('/v3/movie', async (req, res) => {
     res.status(500).json({ success: false, error: 'Internal Server Error' });
   }
 });
-
-// ... (remaining code)
-
-
 
 app.get('/movie/:id', async (req, res) => {
   const { id } = req.params;
